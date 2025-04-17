@@ -12,7 +12,7 @@ Questo programma è stato scritto in Yad e Bash usa solo Wget per generare immag
 This program was written in Yad, and Bash only uses Wget to generate images through [https://pollinations.ai](https://pollinations.ai/)
 
 You can open images with Gimp (if installed), or save them to a folder in .jpg format
-
-https://github.com/vitforlinux-gimp/AIGoR/blob/main/images/aigor.jpg
-
-https://github.com/vitforlinux-gimp/AIGoR/blob/main/images/aigor-viewer.jpg
+[
+https://github.com/vitforlinux-gimp/AIGoR/blob/main/images/aigor.jpg](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor.jpg)
+[
+https://github.com/vitforlinux-gimp/AIGoR/blob/main/images/aigor-viewer.jpg](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor-viewer.jpg)
