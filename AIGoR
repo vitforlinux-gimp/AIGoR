@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+temp="`mktemp -d`"
+
+data=$(yad --width=600 --form \
+            --title="AIGoR https://pollinations.ai/" \
+            --text="Enter the following information to generate an image" \
+            --center \
+            --field="Prompt":TXT \
+            --field="Width":NUM \
+            --field="Height":NUM\
+            --field="Seed (not used)":NUM \
+            --field="Engine":CB\
+	    "" "512" "512" "" 'turbo!flux!')
+ans=$?
+if [ $ans -eq 0 ]
+then
+    echo "You have entered the following information:"
+    IFS="|" read -r -a array <<< "$data"
+    echo Prompt: "${array[0]}"
+    echo Width: "${array[1]}"
+    echo Height: "${array[2]}"
+    echo Seed: "${array[3]}"
+    echo Engine: "${array[4]}"
+else
+    echo "You deleted"
+fi
+title="${array[0]}"
+
+wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}"
+sleep 15
+viewpic=$(yad --picture --file-op \
+  --title="Picture viewer" \
+  --width=800 --height=600 \
+ --button="Open in Gimp":5 --button=Save:0 --button=Exit:1 \
+  --filename="$temp"/"$title".jpg) options=$?
+
+echo $options
+
+if [ "$options" = 0 ]; then	
+	savepic=$(yad --file --save --filename="$temp"/"$title".jpg) save=$?
+	#echo  save "$save"
+	echo pic "$savepic"
+	mv "$temp"/"$title".jpg "$savepic"
+fi
+
+if [ "$options" = 1 ]; then	
+	rm -rf "$temp"
+fi
+
+if [ "$options" = 5 ]; then	
+	gimp "$temp"/"$title".jpg
+fi
+rm -rf "$temp"
+exit 0
