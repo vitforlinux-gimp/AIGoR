@@ -2,7 +2,7 @@
 
 temp="`mktemp -d`"
 
-data=$(yad --width=600 --form \
+data=$(yad --width=600 --center --form \
             --title="AIGoR https://pollinations.ai/" \
             --text="Enter the following information to generate an image" \
             --center \
@@ -27,9 +27,9 @@ else
 fi
 title="${array[0]}"
 
-wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}"
-sleep 15
-viewpic=$(yad --picture --file-op \
+wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+#sleep 15
+viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
  --button="Open in Gimp":5 --button=Save:0 --button=Exit:1 \
