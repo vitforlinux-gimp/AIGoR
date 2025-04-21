@@ -15,7 +15,7 @@ You can open images with Gimp (if installed), or save them to a folder in .jpg f
 
 (INSTALL - INSTALLAZIONE)
 
-```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/AIGoR && && chmod +x /tmp/AIGoR && sudo mv /tmp/AIGoR /usr/local/bin/```
+```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/AIGoR && chmod +x /tmp/AIGoR && sudo mv /tmp/AIGoR /usr/local/bin/```
 
 ![aigor input](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor.jpg)
 
