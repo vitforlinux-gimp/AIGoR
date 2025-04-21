@@ -13,6 +13,10 @@ This program was written in Yad, and Bash only uses Wget to generate images thro
 
 You can open images with Gimp (if installed), or save them to a folder in .jpg format
 
+(INSTALL - INSTALLAZIONE)
+
+```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/AIGoR && && chmod +x /tmp/AIGoR && sudo mv /tmp/AIGoR /usr/local/bin/```
+
 ![aigor input](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor.jpg)
 
 
