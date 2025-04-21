@@ -2,37 +2,66 @@
 
 temp="`mktemp -d`"
 
-data=$(yad --width=600 --center --form \
+ while :
+	do
+data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --title="AIGoR https://pollinations.ai/" \
             --text="Enter the following information to generate an image" \
             --center \
             --field="Prompt":TXT \
             --field="Width":NUM \
             --field="Height":NUM\
-            --field="Seed (not used)":NUM \
+            --field="Seed (0 = Random)":NUM \
             --field="Engine":CB\
-	    "" "512" "512" "" 'turbo!flux!')
+	    --field="Nologo":CHK \
+	    "" "512" "512" "0" 'flux!turbo' "true") butt=$?
+	 
+echo $butt	 
+if [ "$butt" = 1 ]; then	
+	rm -rf "$temp" && exit 0
+fi
+	    
 ans=$?
 if [ $ans -eq 0 ]
 then
-    echo "You have entered the following information:"
     IFS="|" read -r -a array <<< "$data"
+    
+    if [ "${array[0]}" == "" ]
+    then
+    void=$(yad --width=300 --center --text "Prompt is void Retry or Exit?" \
+--button=Retry:0 --button=Exit:1) ftest=$?
+if [ "$ftest" = 1 ]; then	
+	rm -rf "$temp" && exit 0
+fi
+if [ "$ftest" = 0 ]; then	
+	 continue
+fi
+    fi
+    echo "You have entered the following information:"
     echo Prompt: "${array[0]}"
     echo Width: "${array[1]}"
     echo Height: "${array[2]}"
     echo Seed: "${array[3]}"
     echo Engine: "${array[4]}"
+    echo Nologo: "${array[5]}"
 else
     echo "You deleted"
 fi
 title="${array[0]}"
+seed="${array[3]}"
 
-wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+if [ "$seed" = 0 ]; then	
+	seed=$RANDOM
+fi
+echo Seed $seed
+
+wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}"\&nologo="${array[5]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+
 #sleep 15
 viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
- --button="Open in Gimp":5 --button=Save:0 --button=Exit:1 \
+ --button="Retry":4 --button="Open in Gimp":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
   --filename="$temp"/"$title".jpg) options=$?
 
 echo $options
@@ -41,15 +70,26 @@ if [ "$options" = 0 ]; then
 	savepic=$(yad --file --save --filename="$temp"/"$title".jpg) save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
+	mv "$temp"/"$title".jpg "$savepic" && exit 0
+fi
+
+if [ "$options" = 3 ]; then	
+	savepic=$(yad --file --save --filename="$temp"/"$title".jpg) save=$?
+	#echo  save "$save"
+	echo pic "$savepic"
 	mv "$temp"/"$title".jpg "$savepic"
 fi
 
 if [ "$options" = 1 ]; then	
-	rm -rf "$temp"
+	rm -rf "$temp" && exit 0
 fi
 
 if [ "$options" = 5 ]; then	
 	gimp "$temp"/"$title".jpg
 fi
+if [ "$options" = 4 ]; then	
+	echo "retry"
+fi
+done
 rm -rf "$temp"
 exit 0
