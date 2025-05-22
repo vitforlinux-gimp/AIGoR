@@ -9,12 +9,13 @@ data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --text="Enter the following information to generate an image" \
             --center \
             --field="Prompt":TXT \
+	     --field="Enhance Prompt":CB\
             --field="Width":NUM \
             --field="Height":NUM\
             --field="Seed (0 = Random)":NUM \
             --field="Engine":CB\
 	    --field="Nologo":CHK \
-	    "" "512" "512" "0" 'flux!turbo' "true") butt=$?
+	    "" "None!Yes" "512" "512" "0" 'flux!turbo' "true") butt=$?
 	 
 echo $butt	 
 if [ "$butt" = 1 ]; then	
@@ -39,24 +40,38 @@ fi
     fi
     echo "You have entered the following information:"
     echo Prompt: "${array[0]}"
-    echo Width: "${array[1]}"
-    echo Height: "${array[2]}"
-    echo Seed: "${array[3]}"
-    echo Engine: "${array[4]}"
-    echo Nologo: "${array[5]}"
+    echo Enhance: "${array[1]}"
+    echo Width: "${array[2]}"
+    echo Height: "${array[3]}"
+    echo Seed: "${array[4]}"
+    echo Engine: "${array[5]}"
+    echo Nologo: "${array[6]}"
 else
     echo "You deleted"
 fi
 title="${array[0]}"
-seed="${array[3]}"
+enhance="${array[1]}"
+seed="${array[4]}"
 
 if [ "$seed" = 0 ]; then	
 	seed=$RANDOM
 fi
 echo Seed $seed
 
-wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[1]}"\&height="${array[2]}"\&model="${array[4]}"\&nologo="${array[5]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+if [ "$enhance" = "Yes" ]; then	
+	#echo "$enhance"
+	wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$title".txt
+)
+#echo "$entext"
+#cat vecchio\ scarpone.txt | grep '1\.' | sed  's/1.//'
 
+wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+fi
+
+if [ "$enhance" = "None" ]; then
+wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+fi
 #sleep 15
 viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
