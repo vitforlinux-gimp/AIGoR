@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 temp="`mktemp -d`"
+config="/home/$USER/.config/AIGoR"
+mkdir -p "$config"
+title=`cat $config/title`
+width=`cat $config/width`
+height=`cat $config/height`
 
  while :
 	do
@@ -15,7 +20,7 @@ data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --field="Seed (0 = Random)":NUM \
             --field="Engine":CB\
 	    --field="Nologo":CHK \
-	    "" "None!Yes" "512" "512" "0" 'flux!turbo' "true") butt=$?
+	    "$title" "None!Yes" "$width" "$height" "0" 'flux!turbo' "true") butt=$?
 	 
 echo $butt	 
 if [ "$butt" = 1 ]; then	
@@ -50,6 +55,11 @@ else
     echo "You deleted"
 fi
 title="${array[0]}"
+width="${array[2]}"
+height="${array[3]}"
+echo "$title"> $config/title
+echo "$width"> $config/width
+echo "$height"> $config/height
 enhance="${array[1]}"
 seed="${array[4]}"
 
@@ -60,39 +70,39 @@ echo Seed $seed
 
 if [ "$enhance" = "Yes" ]; then	
 	#echo "$enhance"
-	wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+	wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$title".txt
 )
 #echo "$entext"
 #cat vecchio\ scarpone.txt | grep '1\.' | sed  's/1.//'
 
-wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title"."$seed".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 
 if [ "$enhance" = "None" ]; then
-wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title"."$seed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 #sleep 15
 viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
  --button="Retry":4 --button="Open in Gimp":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
-  --filename="$temp"/"$title".jpg) options=$?
+  --filename="$temp"/"$title"."$seed".jpg) options=$?
 
 echo $options
 
 if [ "$options" = 0 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$title".jpg) save=$?
+	savepic=$(yad --file --save --filename="$temp"/"$title"."$seed".jpg) save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$title".jpg "$savepic" && exit 0
+	mv "$temp"/"$title"."$seed".jpg "$savepic" && exit 0
 fi
 
 if [ "$options" = 3 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$title".jpg) save=$?
+	savepic=$(yad --file --save --filename="$temp"/"$title"."$seed".jpg) save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$title".jpg "$savepic"
+	mv "$temp"/"$title"."$seed".jpg "$savepic"
 fi
 
 if [ "$options" = 1 ]; then	
@@ -100,7 +110,7 @@ if [ "$options" = 1 ]; then
 fi
 
 if [ "$options" = 5 ]; then	
-	gimp "$temp"/"$title".jpg
+	gimp "$temp"/"$title"."$seed".jpg
 fi
 if [ "$options" = 4 ]; then	
 	echo "retry"
