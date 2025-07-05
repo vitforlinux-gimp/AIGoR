@@ -3,9 +3,9 @@
 temp="`mktemp -d`"
 config="/home/$USER/.config/AIGoR"
 mkdir -p "$config"
-title=`cat $config/title`
-width=`cat $config/width`
-height=`cat $config/height`
+title=`cat "$config"/title`
+width=`cat "$config"/width`
+height=`cat "$config"/height`
 
  while :
 	do
@@ -14,13 +14,14 @@ data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --text="Enter the following information to generate an image" \
             --center \
             --field="Prompt":TXT \
-	     --field="Enhance Prompt":CB\
+	     --field="Suggest Prompt":CB\
             --field="Width":NUM \
             --field="Height":NUM\
             --field="Seed (0 = Random)":NUM \
             --field="Engine":CB\
 	    --field="Nologo":CHK \
-	    "$title" "None!Yes" "$width" "$height" "0" 'flux!turbo' "true") butt=$?
+	    --field="Enhance":CHK \
+	    "$title" "None!Yes" "$width" "$height" "0" "flux!turbo" "true" "false") butt=$?
 	 
 echo $butt	 
 if [ "$butt" = 1 ]; then	
@@ -45,12 +46,13 @@ fi
     fi
     echo "You have entered the following information:"
     echo Prompt: "${array[0]}"
-    echo Enhance: "${array[1]}"
+    echo Suggest: "${array[1]}"
     echo Width: "${array[2]}"
     echo Height: "${array[3]}"
     echo Seed: "${array[4]}"
     echo Engine: "${array[5]}"
     echo Nologo: "${array[6]}"
+    echo Enhance: "${array[7]}"
 else
     echo "You deleted"
 fi
@@ -62,6 +64,10 @@ echo "$width"> $config/width
 echo "$height"> $config/height
 enhance="${array[1]}"
 seed="${array[4]}"
+short="${title:0:200}"
+short="${short//,}"
+short="${short//:}"
+#touch "$temp"/"$short"."$seed".jpg
 
 if [ "$seed" = 0 ]; then	
 	seed=$RANDOM
@@ -70,39 +76,39 @@ echo Seed $seed
 
 if [ "$enhance" = "Yes" ]; then	
 	#echo "$enhance"
-	wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
-entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$title".txt
+	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt
 )
 #echo "$entext"
 #cat vecchio\ scarpone.txt | grep '1\.' | sed  's/1.//'
 
-wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title"."$seed".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$seed".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 
 if [ "$enhance" = "None" ]; then
-wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$title"."$seed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$seed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 #sleep 15
 viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
  --button="Retry":4 --button="Open in Gimp":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
-  --filename="$temp"/"$title"."$seed".jpg) options=$?
+  --filename="$temp"/"$short"."$seed".jpg) options=$?
 
 echo $options
 
 if [ "$options" = 0 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$title"."$seed".jpg) save=$?
+	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".jpg) save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$title"."$seed".jpg "$savepic" && exit 0
+	mv "$temp"/"$short"."$seed".jpg "$savepic" && exit 0
 fi
 
 if [ "$options" = 3 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$title"."$seed".jpg) save=$?
+	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".jpg) save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$title"."$seed".jpg "$savepic"
+	mv "$temp"/"$short"."$seed".jpg "$savepic"
 fi
 
 if [ "$options" = 1 ]; then	
@@ -110,7 +116,7 @@ if [ "$options" = 1 ]; then
 fi
 
 if [ "$options" = 5 ]; then	
-	gimp "$temp"/"$title"."$seed".jpg
+	gimp "$temp"/"$short"."$seed".jpg
 fi
 if [ "$options" = 4 ]; then	
 	echo "retry"
