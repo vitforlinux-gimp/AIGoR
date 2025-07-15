@@ -12,9 +12,11 @@ ad esempio mi sembra che mistral sia migliore nelle poesie.
 Ma non vanno presi seriamente, sono giocattoli.
 
 Per installare AIngA
+
 ```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/AIngA && chmod +x /tmp/AIngA && sudo mv /tmp/AIngA /usr/local/bin/```
 
 Per installare VanIA
+
 ```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/VanIA && chmod +x /tmp/VanIA && sudo mv /tmp/VanIA /usr/local/bin/```
 
 Per installare SAIge
