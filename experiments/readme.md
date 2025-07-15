@@ -13,15 +13,15 @@ Ma non vanno presi seriamente, sono giocattoli. Il codice è ancora molto provvi
 
 Per installare AIngA
 
-```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/AIngA && chmod +x /tmp/AIngA && sudo mv /tmp/AIngA /usr/local/bin/```
+```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/experiments/AIngA && chmod +x /tmp/AIngA && sudo mv /tmp/AIngA /usr/local/bin/```
 
 Per installare VanIA
 
-```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/VanIA && chmod +x /tmp/VanIA && sudo mv /tmp/VanIA /usr/local/bin/```
+```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/experiments/VanIA && chmod +x /tmp/VanIA && sudo mv /tmp/VanIA /usr/local/bin/```
 
 Per installare SAIge
 
-```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/SAIge && chmod +x /tmp/SAIge && sudo mv /tmp/SAIge /usr/local/bin/```
+```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/experiments/SAIge && chmod +x /tmp/SAIge && sudo mv /tmp/SAIge /usr/local/bin/```
 
 I file generati si trovano in ~/nome_programma
 
