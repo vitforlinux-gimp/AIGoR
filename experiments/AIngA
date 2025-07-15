@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+#temp="`mktemp -d`"
+temp="/home/$USER/AIngA"
+config="/home/$USER/.config/AIngA"
+mkdir -p "$temp"
+mkdir -p "$config"
+
+if [ ! -f "$config"/engines ]; then
+    echo "sur!deepseek!grok!llama-fast-roblox!llama-roblox!llamascout!mistral!mistral-roblox!openai!openai-fast!openai-large!openai-roblox!phi!qwen-coder!elixposearch!evil!hypnosis-tracy!midijourney!mirexa!rtist!unity!" > "$config"/engines
+fi
+
+ while :
+	do
+title=`cat $config/title`
+engines=`cat $config/engines`
+
+data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
+            --title="AIngA https://pollinations.ai/" \
+            --text="Enter the following information to generate a poetry" \
+            --center \
+            --field="Argomento":TXT \
+	     --field="Enhance Prompt":CB\
+            --field="Rima":CB \
+            --field="Height":NUM\
+            --field="Seed (0 = Random)":NUM \
+            --field="Engine":CB\
+	    --field="Nologo":CHK \
+	    "$title" "None!Yes" "baciata!alternata!incrociata!incatenata!ripetuta" "1280" "0" "$engines" "true") butt=$?
+	 
+echo $butt	 
+if [ "$butt" = 1 ]; then	
+	#rm -rf "$temp" && exit 0
+exit 0
+fi
+	    
+
+ans=$?
+if [ $ans -eq 0 ]
+then
+    IFS="|" read -r -a array <<< "$data"
+    
+    if [ "${array[0]}" == "" ]
+    then
+    void=$(yad --width=300 --center --text "Prompt is void Retry or Exit?" \
+--button=Retry:0 --button=Exit:1) ftest=$?
+if [ "$ftest" = 1 ]; then	
+	#rm -rf "$temp" && exit 0
+	exit 0
+fi
+if [ "$ftest" = 0 ]; then	
+	 continue
+fi
+    fi
+    echo "You have entered the following information:"
+    echo Prompt: "${array[0]}"
+    echo Enhance: "${array[1]}"
+    echo Width: "${array[2]}"
+    echo Height: "${array[3]}"
+    echo Seed: "${array[4]}"
+    echo Engine: "${array[5]}"
+    echo Nologo: "${array[6]}"
+else
+    echo "You deleted"
+fi
+title="${array[0]}"
+rima="${array[2]}"
+echo "$title"> $config/title
+enhance="${array[1]}"
+seed="${array[4]}"
+engine="${array[5]}"
+short="${title:0:200}"
+short="${short//,}"
+short="${short//:}"
+
+sed -i -e "s/$engine!//g" "$config"/engines
+sed -i "s/^/$engine!/" "$config"/engines
+
+if [ "$seed" = 0 ]; then	
+	seed=$RANDOM
+fi
+echo Seed $seed
+
+if [ "$enhance" = "Yes" ]; then	
+	#echo "$enhance"
+	wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt
+)
+#echo "$entext"
+#cat vecchio\ scarpone.txt | grep '1\.' | sed  's/1.//'
+
+wget --connect-timeout=10 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed=$seed |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+fi
+
+if [ "$enhance" = "None" ]; then
+	wget --connect-timeout=5 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$seed".txt https://text.pollinations.ai/prompt/"una poesia in lingua italiana con rima '$rima' con tema $title"\&seed=$seed\&model="${array[5]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+fi
+#sleep 15
+sed -i '/^Certo/ d' "$temp"/"$short"."$seed".txt
+sed -i '/^Sicuro/ d' "$temp"/"$short"."$seed".txt
+sed -i '${/Se\ Vuoi /d;}' "$temp"/"$short"."$seed".txt
+sed -i '${/Se\ ti /d;}' "$temp"/"$short"."$seed".txt
+sed -i '${/Ti\ va /d;}' "$temp"/"$short"."$seed".txt
+#sed -i '$ d' "$temp"/"$short".txt
+viewpic=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op\
+ --button="Retry":4 --button="Open in LOffice":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
+< "$temp"/"$short"."$seed".txt) options=$?
+echo $options
+
+if [ "$options" = 0 ]; then	
+	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".txt) save=$?
+	#echo  save "$save"
+	echo pic "$savepic"
+	mv "$temp"/"$short"."$seed".txt "$savepic" && exit 0
+fi
+
+if [ "$options" = 3 ]; then	
+	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".txt) save=$?
+	#echo  save "$save"
+	echo pic "$savepic"
+	mv "$temp"/"$short"."$seed".txt "$savepic"
+fi
+
+if [ "$options" = 1 ]; then	
+	#rm -rf "$temp" && exit 0
+	exit 0
+fi
+
+if [ "$options" = 5 ]; then	
+	soffice "$temp"/"$short"."$seed".txt
+fi
+if [ "$options" = 4 ]; then	
+	echo "retry"
+fi
+done
+#rm -rf "$temp"
+exit 0
