@@ -22,3 +22,7 @@ Per installare VanIA
 Per installare SAIge
 
 ```wget -P /tmp https://github.com/vitforlinux-gimp/AIGoR/blob/main/experiments/SAIge && chmod +x /tmp/SAIge && sudo mv /tmp/SAIge /usr/local/bin/```
+
+I file generati si trovano in ~/nome_programma
+
+La configurazione si trova in ~/.config/nome_programma
