@@ -9,7 +9,7 @@ SAIge scrive saggi brevi, di circa 1000 / 1500 parole
 Usano tutti i motori di AI dispinibili in pollinations.ai, lo scopo è vedere se ci sono motori migliori per qualche uso,
 ad esempio mi sembra che mistral sia migliore nelle poesie.
 
-Ma non vanno presi seriamente, sono giocattoli.
+Ma non vanno presi seriamente, sono giocattoli. Il codice è ancora molto provvisorio.
 
 Per installare AIngA
 
