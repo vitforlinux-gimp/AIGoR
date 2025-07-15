@@ -1,4 +1,4 @@
-In questa cartella sono contenuti esperimenti in lingua italiana basati sul codice di AIGoR e text.pollinations.ai
+In questa cartella sono contenuti esperimenti in lingua italiana basati sul codice di AIGoR e text.pollinations.ai, funzionano con Linux se si ha installato yad
 
 AIngA scrive poesie
 
