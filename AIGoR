@@ -21,7 +21,7 @@ data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --field="Engine":CB\
 	    --field="Nologo":CHK \
 	    --field="Enhance":CHK \
-	    "$title" "None!Yes" "$width" "$height" "0" "flux!turbo" "true" "false") butt=$?
+	    "$title" "None!Yes" "$width" "$height" "0" "flux!gptimage!turbo" "true" "false") butt=$?
 	 
 echo $butt	 
 if [ "$butt" = 1 ]; then	
