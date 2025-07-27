@@ -2,10 +2,13 @@
 
 temp="`mktemp -d`"
 config="/home/$USER/.config/AIGoR"
+asavedir="/home/$USER/AIGoR"
 mkdir -p "$config"
+mkdir -p "$asavedir"
 title=`cat "$config"/title`
 width=`cat "$config"/width`
 height=`cat "$config"/height`
+asave=`cat "$config"/asave`
 
  while :
 	do
@@ -21,7 +24,8 @@ data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
             --field="Engine":CB\
 	    --field="Nologo":CHK \
 	    --field="Enhance":CHK \
-	    "$title" "None!Yes" "$width" "$height" "0" "flux!gptimage!turbo" "true" "false") butt=$?
+	    --field="Auto Save in ~/AIGoR":CHK \
+	    "$title" "None!Yes" "$width" "$height" "0" "flux!gptimage!turbo" "true" "false" "$asave") butt=$?
 	 
 echo $butt	 
 if [ "$butt" = 1 ]; then	
@@ -53,15 +57,18 @@ fi
     echo Engine: "${array[5]}"
     echo Nologo: "${array[6]}"
     echo Enhance: "${array[7]}"
+    echo AutoSave: "${array[8]}"
 else
     echo "You deleted"
 fi
 title="${array[0]}"
 width="${array[2]}"
 height="${array[3]}"
+asave="${array[8]}"
 echo "$title"> $config/title
 echo "$width"> $config/width
 echo "$height"> $config/height
+echo "$asave"> $config/asave
 enhance="${array[1]}"
 seed="${array[4]}"
 short="${title:0:200}"
@@ -70,57 +77,124 @@ short="${short//:}"
 #touch "$temp"/"$short"."$seed".jpg
 
 if [ "$seed" = 0 ]; then	
-	seed=$RANDOM
+	rseed=$RANDOM
+else
+	rseed=$seed
 fi
-echo Seed $seed
+echo Seed $rseed
 
 if [ "$enhance" = "Yes" ]; then	
 	#echo "$enhance"
 	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
-entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt
-)
-#echo "$entext"
+#entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt )
+
+sed -i -E 's/\*//g;s/\"//g' "$temp"/"$short".txt
+
+echo "false " >"$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '1\.' | sed  's/1.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '2\.' | sed  's/2.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '3\.' | sed  's/3.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '4\.' | sed  's/4.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '5\.' | sed  's/5.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '6\.' | sed  's/6.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '7\.' | sed  's/7.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '8\.' | sed  's/8.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '9\.' | sed  's/9.//'>> "$temp"/temp.txt
+echo "false " >>  "$temp"/temp.txt 
+cat "$temp"/"$short".txt | grep '10\.' | sed  's/10.//'>> "$temp"/temp.txt
+entext=$(yad --center --list --editable --checklist \
+--title="Suggested prompt - the fields are editable" \
+  --width=1000 --height=400 \
+  --column=Tick \
+  --column=Suggest \
+  < "$temp"/temp.txt )
+echo "$entext" | sed -E 's/\*//g;s/TRUE\|//g;s/\|//g' > "$temp"/temp.txt
+
+#temptxt=`cat "$temp"/temp.txt`
+#sed -i -E 's/\*\*//g'"$temp"/temp.txt
 #cat vecchio\ scarpone.txt | grep '1\.' | sed  's/1.//'
 
-wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$seed".jpg https://image.pollinations.ai/prompt/"$entext"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+cat "$temp"/temp.txt | \
+while read arg; do
+  echo "Argument: $arg"
+sharg="${arg:0:200}"
+sharg="${sharg//,}"
+sharg="${sharg//:}"
+
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$sharg"."$rseed".jpg https://image.pollinations.ai/prompt/"$arg"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$rseed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+done
 fi
 
 if [ "$enhance" = "None" ]; then
-wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$seed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$rseed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&rseed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 #sleep 15
+ls "$temp"/*.jpg > "$temp"/imglist
+
+if [ "$asave" = "TRUE" ]; then	
+	echo TRUE
+	cp "$temp"/*.jpg "$asavedir"
+	#cp "$temp"/*.txt "$asavedir"
+	# sed -i -e "s/$temp/$asavedir/g" "$temp"/imglist
+	#  "$temp"/imglist
+	sed -i -e "s!$temp!AIGoR!g" "$temp"/imglist
+	sed -i -e "s!AIGoR!$asavedir!g" "$temp"/imglist
+	#sed -i -e 's/\n//g' "$temp"/imglist
+	
+fi
+cat "$temp"/imglist | \
+while read arg; do
+  echo "Argument: $arg"
 viewpic=$(yad --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
  --button="Retry":4 --button="Open in Gimp":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
-  --filename="$temp"/"$short"."$seed".jpg) options=$?
+  --filename="$arg") options=$?
 
 echo $options
 
 if [ "$options" = 0 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".jpg) save=$?
+	savepic=$(yad --file --save --filename="$arg") save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$short"."$seed".jpg "$savepic" && exit 0
+	mv "$arg" "$savepic" && exit 0
 fi
 
 if [ "$options" = 3 ]; then	
-	savepic=$(yad --file --save --filename="$temp"/"$short"."$seed".jpg) save=$?
+	savepic=$(yad --file --save --filename="$arg") save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
-	mv "$temp"/"$short"."$seed".jpg "$savepic"
+	mv "$arg" "$savepic"
 fi
 
 if [ "$options" = 1 ]; then	
 	rm -rf "$temp" && exit 0
 fi
 
-if [ "$options" = 5 ]; then	
-	gimp "$temp"/"$short"."$seed".jpg
+if [ "$options" = 5 ]; then
+sed -i 's/\/home/\"\/home/g' "$temp"/imglist
+sed -i -e "s!$temp!\"$temp!g" "$temp"/imglist
+sed -i 's/\.jpg/\.jpg\"/g' "$temp"/imglist
+sed -i 'N;s/\n/\ /g' "$temp"/imglist
+sed -i ':l; N; s/\n/\ /; tl'  "$temp"/imglist
+#sed -i 's/\"/gimp\ \"/' "$temp"/imglist
+
+	imgs=`cat "$temp"/imglist`
+	imgs="gimp ""$imgs"
+	bash -c "$imgs"
 fi
 if [ "$options" = 4 ]; then	
 	echo "retry"
 fi
 done
-rm -rf "$temp"
+done
+#rm -rf "$temp"
 exit 0
