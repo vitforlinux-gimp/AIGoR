@@ -20,4 +20,7 @@ You can open images with Gimp (if installed), or save them to a folder in .jpg f
 ![aigor input](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor.jpg)
 
 
+![aigor suggest prompt](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor-suggest-prompt.jpg)
+
+
 ![aigor viewer](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor-viewer.jpg)
