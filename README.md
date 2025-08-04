@@ -24,7 +24,9 @@ The Autosave function allows you to have direct files saved in the/home/user_nam
 
 (INSTALL - INSTALLAZIONE)
 
-```wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/AIGoR && chmod +x /tmp/AIGoR && sudo mv /tmp/AIGoR /usr/local/bin/```
+```
+wget https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/aigor-installer.sh && chmod a+x ./aigor-installer.sh && ./aigor-installer.sh
+```
 
 ![aigor input](https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/images/aigor.jpg)
 
