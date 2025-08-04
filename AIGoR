@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-temp="`mktemp -d`"
+
 config="/home/$USER/.config/AIGoR"
 asavedir="/home/$USER/AIGoR"
 mkdir -p "$config"
@@ -9,10 +9,12 @@ title=`cat "$config"/title`
 width=`cat "$config"/width`
 height=`cat "$config"/height`
 asave=`cat "$config"/asave`
+ICON="applications-graphics"
 
  while :
 	do
-data=$(yad --width=600 --button=Ok:0 --button=Exit:1 --center --form \
+temp="`mktemp -d`"
+data=$(yad --width=600 --window-icon "$ICON" --image  "$ICON"  --image-on-top --button=Ok:0 --button=Exit:1 --center --form \
             --title="AIGoR https://pollinations.ai/" \
             --text="Enter the following information to generate an image" \
             --center \
@@ -39,7 +41,7 @@ then
     
     if [ "${array[0]}" == "" ]
     then
-    void=$(yad --width=300 --center --text "Prompt is void Retry or Exit?" \
+    void=$(yad --window-icon "$ICON" --width=300 --center --text "Prompt is void Retry or Exit?" \
 --button=Retry:0 --button=Exit:1) ftest=$?
 if [ "$ftest" = 1 ]; then	
 	rm -rf "$temp" && exit 0
@@ -85,7 +87,7 @@ echo Seed $rseed
 
 if [ "$enhance" = "Yes" ]; then	
 	#echo "$enhance"
-	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --window-icon "$ICON"--progress --auto-close --center  --width=300 --title="Wait please..."
 #entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt )
 
 sed -i -E 's/\*//g;s/\"//g' "$temp"/"$short".txt
@@ -110,7 +112,7 @@ echo "false " >>  "$temp"/temp.txt
 cat "$temp"/"$short".txt | grep '9\.' | sed  's/9.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
 cat "$temp"/"$short".txt | grep '10\.' | sed  's/10.//'>> "$temp"/temp.txt
-entext=$(yad --center --list --editable --checklist \
+entext=$(yad --window-icon "$ICON" --center --list --editable --checklist \
 --title="Suggested prompt - the fields are editable" \
   --width=1000 --height=400 \
   --column=Tick \
@@ -129,12 +131,12 @@ sharg="${arg:0:200}"
 sharg="${sharg//,}"
 sharg="${sharg//:}"
 
-wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$sharg"."$rseed".jpg https://image.pollinations.ai/prompt/"$arg"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$rseed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$sharg"."$rseed".jpg https://image.pollinations.ai/prompt/"$arg"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$rseed"\&enhance="${array[7]}" |  yad --window-icon "$ICON" --progress --auto-close --center  --width=300 --title="Wait please..."
 done
 fi
 
 if [ "$enhance" = "None" ]; then
-wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$rseed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&rseed="$seed"\&enhance="${array[7]}" |  yad --progress --auto-close --center  --width=300 --title="Wait please..."
+wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$rseed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&rseed="$seed"\&enhance="${array[7]}" |  yad --window-icon "$ICON" --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 #sleep 15
 ls "$temp"/*.jpg > "$temp"/imglist
@@ -153,7 +155,7 @@ fi
 cat "$temp"/imglist | \
 while read arg; do
   echo "Argument: $arg"
-viewpic=$(yad --center --picture --file-op \
+viewpic=$(yad --window-icon "$ICON" --center --picture --file-op \
   --title="Picture viewer" \
   --width=800 --height=600 \
  --button="Retry":4 --button="Open in Gimp":5  --button="Save and Retry":3 --button="Save and Exit":0 --button=Exit:1 \
@@ -162,14 +164,14 @@ viewpic=$(yad --center --picture --file-op \
 echo $options
 
 if [ "$options" = 0 ]; then	
-	savepic=$(yad --file --save --filename="$arg") save=$?
+	savepic=$(yad --window-icon "$ICON" --file --save --filename="$arg") save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
 	mv "$arg" "$savepic" && exit 0
 fi
 
 if [ "$options" = 3 ]; then	
-	savepic=$(yad --file --save --filename="$arg") save=$?
+	savepic=$(yad --window-icon "$ICON" --file --save --filename="$arg") save=$?
 	#echo  save "$save"
 	echo pic "$savepic"
 	mv "$arg" "$savepic"
