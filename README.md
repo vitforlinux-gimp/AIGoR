@@ -22,7 +22,7 @@ The new suggest prompt function allows you to have suggestions directly from the
 The Autosave function allows you to have direct files saved in the/home/user_name/AIGoR folder
 
 
-(INSTALL - INSTALLAZIONE)
+(INSTALL - INSTALLAZIONE) Copy and paste the code below in the terminal - Copia e incolla il codice qui sotto nel terminale
 
 ```
 wget https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/aigor-installer.sh && chmod a+x ./aigor-installer.sh && ./aigor-installer.sh
