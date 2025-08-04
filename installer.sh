@@ -1,1 +1,0 @@
-wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/AIGoR && chmod +x /tmp/AIGoR && sudo mv /tmp/AIGoR /usr/local/bin/ && wget -P /tmp https://raw.githubusercontent.com/vitforlinux-gimp/AIGoR/refs/heads/main/aigor.desktop && sudo mv /tmp/aigor.desktop /usr/share/applications/
