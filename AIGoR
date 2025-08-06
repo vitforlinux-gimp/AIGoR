@@ -67,6 +67,8 @@ title="${array[0]}"
 width="${array[2]}"
 height="${array[3]}"
 asave="${array[8]}"
+title="${title//.}"
+#title="${title//:}"
 echo "$title"> $config/title
 echo "$width"> $config/width
 echo "$height"> $config/height
@@ -87,7 +89,7 @@ echo Seed $rseed
 
 if [ "$enhance" = "Yes" ]; then	
 	#echo "$enhance"
-	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --window-icon "$ICON"--progress --auto-close --center  --width=300 --title="Wait please..."
+	wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short".txt https://text.pollinations.ai/prompt/"ten examples of enhance prompt for image generation in English ""$title" |  yad --window-icon "$ICON" --progress --auto-close --center  --width=300 --title="Wait please..."
 #entext=$(yad  --title="Please remove the superfluous text." --center --width=800 --height=600 --editable --text-info --in-place --wrap --file-op < "$temp"/"$short".txt )
 
 sed -i -E 's/\*//g;s/\"//g' "$temp"/"$short".txt
@@ -127,15 +129,19 @@ echo "$entext" | sed -E 's/\*//g;s/TRUE\|//g;s/\|//g' > "$temp"/temp.txt
 cat "$temp"/temp.txt | \
 while read arg; do
   echo "Argument: $arg"
+arg="${arg//\\n}"
 sharg="${arg:0:200}"
 sharg="${sharg//,}"
 sharg="${sharg//:}"
+#sharg="${sharg//\\n}"
 
 wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$sharg"."$rseed".jpg https://image.pollinations.ai/prompt/"$arg"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&seed="$rseed"\&enhance="${array[7]}" |  yad --window-icon "$ICON" --progress --auto-close --center  --width=300 --title="Wait please..."
 done
 fi
 
 if [ "$enhance" = "None" ]; then
+title="${title//\\n}"
+short="${short//\\n}"
 wget --connect-timeout=20 --no-http-keep-alive -U "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" --output-document="$temp"/"$short"."$rseed".jpg https://image.pollinations.ai/prompt/"$title"?width="${array[2]}"\&height="${array[3]}"\&model="${array[5]}"\&nologo="${array[6]}"\&rseed="$seed"\&enhance="${array[7]}" |  yad --window-icon "$ICON" --progress --auto-close --center  --width=300 --title="Wait please..."
 fi
 #sleep 15
