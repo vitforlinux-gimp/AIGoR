@@ -95,25 +95,25 @@ if [ "$enhance" = "Yes" ]; then
 sed -i -E 's/\*//g;s/\"//g' "$temp"/"$short".txt
 
 echo "false " >"$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '1\.' | sed  's/1.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^1\.' | sed  's/1.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '2\.' | sed  's/2.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^2\.' | sed  's/2.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '3\.' | sed  's/3.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^3\.' | sed  's/3.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '4\.' | sed  's/4.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^4\.' | sed  's/4.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '5\.' | sed  's/5.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^5\.' | sed  's/5.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '6\.' | sed  's/6.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^6\.' | sed  's/6.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '7\.' | sed  's/7.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^7\.' | sed  's/7.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '8\.' | sed  's/8.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^8\.' | sed  's/8.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '9\.' | sed  's/9.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^9\.' | sed  's/9.//'>> "$temp"/temp.txt
 echo "false " >>  "$temp"/temp.txt 
-cat "$temp"/"$short".txt | grep '10\.' | sed  's/10.//'>> "$temp"/temp.txt
+cat "$temp"/"$short".txt | grep '^10\.' | sed  's/10.//'>> "$temp"/temp.txt
 entext=$(yad --window-icon "$ICON" --center --list --editable --checklist \
 --title="Suggested prompt - the fields are editable" \
   --width=1000 --height=400 \
