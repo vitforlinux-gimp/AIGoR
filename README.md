@@ -2,6 +2,7 @@
 AIGor - Artificial Images GeneratOR - for Linux only
 
 (NEWS)
+
 Il progetto ha cambiato nome ora si chiama AIMAGoR - The project has changed its name now it's called AIMAGoR
 
 [https://github.com/vitforlinux-gimp/AIMAGoR](https://github.com/vitforlinux-gimp/AIMAGoR)
